@@ -81,6 +81,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DropdownEdit\DropdownEdit.csproj">
+      <Project>{CBD74238-104F-45C5-8B4B-F81BD8BA393C}</Project>
+      <Name>DropdownEdit</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

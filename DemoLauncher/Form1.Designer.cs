@@ -28,20 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.dropdownEdit1 = new DropdownEdit.DropdownEdit();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dropdownEdit1
+            // 
+            this.dropdownEdit1.Location = new System.Drawing.Point(143, 34);
+            this.dropdownEdit1.Name = "dropdownEdit1";
+            this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit1.Size = new System.Drawing.Size(214, 20);
+            this.dropdownEdit1.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 350);
+            this.Controls.Add(this.dropdownEdit1);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private DropdownEdit.DropdownEdit dropdownEdit1;
 
     }
 }
