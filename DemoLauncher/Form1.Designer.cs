@@ -38,6 +38,7 @@
             this.dropdownEdit1.Name = "dropdownEdit1";
             this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit1.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
             this.dropdownEdit1.Size = new System.Drawing.Size(214, 20);
             this.dropdownEdit1.TabIndex = 0;
             // 
@@ -49,6 +50,7 @@
             this.Controls.Add(this.dropdownEdit1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
