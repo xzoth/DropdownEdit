@@ -51,6 +51,7 @@
     <Compile Include="DropdownEdit.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DropdownReturnEventArg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryItemDropdownEdit.cs">
       <SubType>Component</SubType>

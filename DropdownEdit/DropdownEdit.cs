@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -16,6 +17,29 @@ namespace DropdownEdit
 {
     public class DropdownEdit : PopupContainerEdit
     {
+        private readonly object eventLock = new object();
+
+        private SelectedRowChangeHandler selectedRowChangeHandler;
+        public event SelectedRowChangeHandler SelectedRowChange
+        {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            add
+            {
+                lock (eventLock)
+                {
+                    selectedRowChangeHandler += value;
+                }
+            }
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            remove
+            {
+                lock (eventLock)
+                {
+                    selectedRowChangeHandler -= value;
+                }
+            }
+        }
+
         #region Member
 
         /// <summary>
@@ -214,26 +238,122 @@ namespace DropdownEdit
 
         protected override void OnTextChanged(EventArgs e)
         {
-            //Expand
-            if (IsExpandOnEdit && !this.IsPopupOpen)
+            //展开
+            IfExpand();
+
+            if (IsApplyRowFilter)
             {
-                BeginInvoke(new MethodInvoker(delegate
-                {
-                    this.Expand();
-                }));
+                ApplyFilter();
             }
 
             base.OnTextChanged(e);
         }
 
-        protected override void OnEditorEnter(EventArgs e)
+        public string DisplayMember
         {
-            base.OnEditorEnter(e);
+            get;
+            set;
         }
 
-        protected override void OnValidated(EventArgs e)
+        internal protected void OnSelectedRowChanged(DataRow row)
         {
-            base.OnValidated(e);
+            string strText = row[DisplayMember].ToString();
+            Text = strText;
+
+            SelectedRowChangeEventArg changeEventArg = new SelectedRowChangeEventArg() { SelectedRow = row };
+            if (selectedRowChangeHandler != null)
+            {
+                selectedRowChangeHandler(this, changeEventArg);
+            }
+
+            this.ClosePopup();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            //回车
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                //当前行
+                DataRowView rowView = Properties.DataView[Properties.GridView.FocusedRowHandle];
+                //触发选中行事件
+                OnSelectedRowChanged(rowView.Row);
+            }
+
+            //上箭头
+            if (e.KeyCode == Keys.Up)
+            {
+                //展开
+                IfExpand();
+                Properties.GridView.FocusedRowHandle -= 1;
+            }
+            //下箭头
+            if (e.KeyCode == Keys.Down)
+            {
+                //展开
+                IfExpand();
+                Properties.GridView.FocusedRowHandle += 1;
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        /// <summary>
+        /// 根据属性决定是否展开列表
+        /// </summary>
+        private void IfExpand()
+        {
+            if (this.Site != null && this.Site.DesignMode)
+            {
+
+            }
+            else
+            {
+                //展开
+                if (IsExpandOnEdit && !this.IsPopupOpen)
+                {
+                    BeginInvoke(new MethodInvoker(delegate
+                    {
+                        this.Expand();
+                    }));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 对数据源应用筛选
+        /// </summary>
+        protected virtual void ApplyFilter()
+        {
+            StringBuilder filterBuilder = new StringBuilder();
+            string strFilteTemplate = "[{0}] LIKE '%{1}%' OR ";
+            string strFilteText = GetFilterString();
+
+            foreach (DataColumn column in DataSource.Columns)
+            {
+                filterBuilder.AppendFormat(strFilteTemplate, column.ColumnName, strFilteText);
+            }
+
+            filterBuilder.Remove(filterBuilder.Length - 3, 3);
+            Properties.DataView.RowFilter = filterBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 获取筛选字符串
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetFilterString()
+        {
+            StringBuilder result = new StringBuilder(Text);
+            result.Replace("[", "[[ ")
+                  .Replace("]", " ]]")
+                  .Replace("*", "[*]")
+                  .Replace("%", "[%]")
+                  .Replace("[[ ", "[[]")
+                  .Replace(" ]]", "[]]")
+                  .Replace("\'", "''");
+
+            return result.ToString();
         }
 
         #endregion

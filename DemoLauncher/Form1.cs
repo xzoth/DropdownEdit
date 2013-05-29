@@ -22,6 +22,7 @@ namespace DemoLauncher
         {
             dropdownEdit1.IsExpandOnEdit = chkIsExpandOnEdit.Checked;
 
+            dropdownEdit1.DisplayMember = "ColunmThree";
             dropdownEdit1.DataSource = MockData;
         }
 
@@ -64,6 +65,11 @@ namespace DemoLauncher
 
                 return mockData;
             }
+        }
+
+        private void dropdownEdit1_SelectedRowChange(object sender, DropdownEdit.SelectedRowChangeEventArg e)
+        {
+            txtSelectedValue.Text = e.SelectedRow[dropdownEdit1.DisplayMember].ToString();
         }
     }
 }

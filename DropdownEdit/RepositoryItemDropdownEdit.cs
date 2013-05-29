@@ -52,6 +52,9 @@ namespace DropdownEdit
             this.gridControl = new GridControl();
             this.gridView = new GridView();
 
+            this.gridControl.ProcessGridKey += gridControl_ProcessGridKey;
+            this.gridControl.MouseClick += gridControl_MouseClick;
+
             this.PopupControl = this.popupContainerControl;
             this.AppearanceDisabled.Options.UseBackColor = true;
 
@@ -65,13 +68,54 @@ namespace DropdownEdit
             this.gridView.GridControl = this.gridControl;
 
             this.gridView.OptionsView.ShowGroupPanel = false;
-            this.gridView.OptionsView.ShowIndicator = false;
+            this.gridView.OptionsView.ShowIndicator = true;
             this.gridView.OptionsBehavior.Editable = false;
+            this.gridView.OptionsBehavior.ReadOnly = true;
 
             this.gridView.OptionsCustomization.AllowFilter = false;
             this.gridView.OptionsCustomization.AllowGroup = false;
             this.gridView.OptionsCustomization.AllowSort = false;
-            this.gridView.OptionsView.AnimationType = GridAnimationType.AnimateAllContent;
+
+            this.gridView.OptionsSelection.EnableAppearanceFocusedCell = false;
+        }
+
+        void gridControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            RaiseSelectedRowChanged();
+        }
+
+        void gridControl_ProcessGridKey(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                RaiseSelectedRowChanged();
+            }
+        }
+
+        private void RaiseSelectedRowChanged()
+        {
+            DropdownEdit editor = OwnerEdit as DropdownEdit;
+
+            DataRow row = DataView[GridView.FocusedRowHandle].Row;
+            editor.OnSelectedRowChanged(row);
+        }
+
+        [ReadOnly(true)]
+        public GridView GridView
+        {
+            get
+            {
+                return this.gridView;
+            }
+        }
+
+        [ReadOnly(true)]
+        public GridControl GridControl
+        {
+            get
+            {
+                return this.gridControl;
+            }
         }
 
         private int dropdownHeight = 200;
@@ -105,13 +149,17 @@ namespace DropdownEdit
         /// <summary>
         /// 获取或设置绑定的数据源
         /// </summary>
+        [NonSerialized, XmlIgnore]
+        private DataTable dataSource = null;
+        /// <summary>
+        /// 获取或设置绑定的数据源
+        /// </summary>
         [XmlIgnore, Browsable(true)]
-        [Category("数据"), Description("数据源")]
-        internal protected DataTable DataSource
+        public DataTable DataSource
         {
             get
             {
-                return this.gridControl.DataSource as DataTable;
+                return dataSource;
             }
             set
             {
@@ -122,8 +170,32 @@ namespace DropdownEdit
                         throw new OverflowException("数据源过大，超过1000条。");
                     }
 
-                    this.gridControl.DataSource = value.DefaultView;
+                    dataSource = value;
+                    this.gridControl.DataSource = dataView = new DataView(dataSource);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 数据源视图
+        /// </summary>
+        [NonSerialized, XmlIgnore]
+        private DataView dataView = null;
+        /// <summary>
+        /// 数据源视图
+        /// </summary>
+        [XmlIgnore]
+        [Browsable(false)]
+        internal protected virtual DataView DataView
+        {
+            get
+            {
+                if (dataView == null && DataSource != null)
+                {
+                    dataView = new DataView(DataSource);
+                }
+
+                return dataView;
             }
         }
 
@@ -141,6 +213,7 @@ namespace DropdownEdit
             }
         }
 
+        [ReadOnly(true)]
         public override string EditorTypeName
         {
             get
