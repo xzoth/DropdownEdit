@@ -25,7 +25,7 @@ using System.Xml.Serialization;
 
 namespace DropdownEdit
 {
-    [UserRepositoryItem("RegisterPopTextEdit")]
+    [UserRepositoryItem("RegisterDropdownEdit")]
     public class RepositoryItemDropdownEdit : RepositoryItemPopupContainerEdit
     {
         static RepositoryItemDropdownEdit()
@@ -44,87 +44,75 @@ namespace DropdownEdit
                                                        true,
                                                        img,
                                                        typeof(PopupEditAccessible)));
-
-            //EditorRegistrationInfo.Default.Editors.Add(new EditorClassInfo(DropdownEdit.CONST_TYPE_NAME, typeof(DropdownEdit), typeof(RepositoryItemDropdownEdit), typeof(PopupContainerEditViewInfo), (BaseEditPainter)new ButtonEditPainter(), true));
-
         }
 
         public RepositoryItemDropdownEdit()
         {
-            //RichTextBox rtb = new RichTextBox();
-            //rtb.Dock = DockStyle.Fill;
-            //PopupContainerControl popupControl = new PopupContainerControl();
-            //popupControl.Controls.Add(rtb);
-
-            //this.PopupControl = popupControl;
-
             this.popupContainerControl = new PopupContainerControl();
             this.gridControl = new GridControl();
             this.gridView = new GridView();
+
             this.PopupControl = this.popupContainerControl;
             this.AppearanceDisabled.Options.UseBackColor = true;
-            this.TextEditStyle = TextEditStyles.Standard;
-            this.popupContainerControl.Controls.Add((Control)this.gridControl);
-            this.popupContainerControl.Location = new Point(200, 3);
-            this.popupContainerControl.Size = new Size(400, 200);
-            this.gridControl.MainView = (BaseView)this.gridView;
+
+            this.popupContainerControl.Controls.Add(this.gridControl);
+            this.popupContainerControl.Location = new Point(0, 0);
+            this.popupContainerControl.Size = new Size(DropdownWidth, DropdownHeight);
+
+            this.gridControl.MainView = this.gridView;
             this.gridControl.Dock = DockStyle.Fill;
-      //      this.gridControl.ViewCollection.AddRange(new BaseView[1]
-      //{
-      //  (BaseView) this.gridView
-      //});
-      //      this.gridView.GridControl = this.gridControl;
-      //      this.gridView.OptionsView.ShowGroupPanel = false;
-      //      this.gridView.OptionsView.ShowIndicator = false;
-      //      this.gridView.OptionsBehavior.Editable = false;
+            this.gridControl.ViewCollection.AddRange(new BaseView[] { this.gridView });
+            this.gridView.GridControl = this.gridControl;
 
-            this.gridView.Columns.Add(new GridColumn()
+            this.gridView.OptionsView.ShowGroupPanel = false;
+            this.gridView.OptionsView.ShowIndicator = false;
+            this.gridView.OptionsBehavior.Editable = false;
+
+            this.gridView.OptionsCustomization.AllowFilter = false;
+            this.gridView.OptionsCustomization.AllowGroup = false;
+            this.gridView.OptionsCustomization.AllowSort = false;
+            this.gridView.OptionsView.AnimationType = GridAnimationType.AnimateAllContent;
+        }
+
+        private int dropdownHeight = 200;
+        [DefaultValue(200)]
+        public int DropdownHeight
+        {
+            get
             {
-                FieldName = "aa",
-                Caption = "aa"
-            });
-            this.gridView.Columns.Add(new GridColumn()
+                return dropdownHeight;
+            }
+            set
             {
-                FieldName = "bb",
-                Caption = "bb"
-            });
-            this.gridView.Columns.Add(new GridColumn()
+                dropdownHeight = value;
+            }
+        }
+
+        private int dropdownWidth = 300;
+        [DefaultValue(300)]
+        public int DropdownWidth
+        {
+            get
             {
-                FieldName = "cc",
-                Caption = "cc"
-            });
-
-            //this.AppearanceDisabled.Options.UseBackColor = true;
-
-            //this.TextEditStyle = TextEditStyles.Standard;
-            //this.PopupControl = this.popupContainerControl;
-
-            ////Init PopupContainerControl
-            //this.popupContainerControl.Location = new Point(200, 0);
-            //this.popupContainerControl.Size = new Size(300, 260);
-
-            //this.popupContainerControl.Controls.Add(this.gridControl);
-            //this.gridControl.MainView = this.gridView;
-            //this.gridControl.Dock = DockStyle.Fill;
-
-            //this.gridControl.ViewCollection.AddRange(new BaseView[1] { this.gridView });
-            //this.gridView.GridControl = this.gridControl;
-            //this.gridView.OptionsView.ShowGroupPanel = false;
-            //this.gridView.OptionsView.ShowIndicator = true;
-            //this.gridView.OptionsBehavior.Editable = false;
+                return dropdownWidth;
+            }
+            set
+            {
+                dropdownWidth = value;
+            }
         }
 
         /// <summary>
         /// 获取或设置绑定的数据源
         /// </summary>
         [XmlIgnore, Browsable(true)]
-        internal protected virtual DataTable DataSource
+        [Category("数据"), Description("数据源")]
+        internal protected DataTable DataSource
         {
             get
             {
                 return this.gridControl.DataSource as DataTable;
             }
-            [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
                 if (value != null)
@@ -134,7 +122,7 @@ namespace DropdownEdit
                         throw new OverflowException("数据源过大，超过1000条。");
                     }
 
-                    this.gridControl.DataSource = value;
+                    this.gridControl.DataSource = value.DefaultView;
                 }
             }
         }
@@ -153,6 +141,14 @@ namespace DropdownEdit
             }
         }
 
+        public override string EditorTypeName
+        {
+            get
+            {
+                return DropdownEdit.CONST_TYPE_NAME;
+            }
+        }
+
         public override BaseEdit CreateEditor()
         {
             DropdownEdit dropdownEdit = base.CreateEditor() as DropdownEdit;
@@ -162,8 +158,8 @@ namespace DropdownEdit
             return dropdownEdit;
         }
 
-        private GridControl gridControl = new GridControl();
-        private GridView gridView = new GridView();
-        private PopupContainerControl popupContainerControl = new PopupContainerControl();
+        private GridControl gridControl;
+        private GridView gridView;
+        private PopupContainerControl popupContainerControl;
     }
 }

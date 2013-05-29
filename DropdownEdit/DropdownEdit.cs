@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
@@ -34,17 +35,42 @@ namespace DropdownEdit
         /// <summary>
         /// 获取或设置绑定的数据源
         /// </summary>
-        [XmlIgnore, Browsable(true)]
-        public virtual DataTable DataSource
+        [XmlIgnore, Browsable(false)]
+        [Category("数据"), Description("数据源")]
+        public DataTable DataSource
         {
             get
             {
                 return this.Properties.DataSource;
             }
-            [MethodImpl(MethodImplOptions.Synchronized)]
+            //[MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
                 this.Properties.DataSource = value;
+            }
+        }
+
+        public int DropdownHeight
+        {
+            get
+            {
+                return this.Properties.DropdownHeight;
+            }
+            set
+            {
+                this.Properties.DropdownHeight = value;
+            }
+        }
+
+        public int DropdownWidth
+        {
+            get
+            {
+                return this.Properties.DropdownWidth;
+            }
+            set
+            {
+                this.Properties.DropdownWidth = value;
             }
         }
 
@@ -151,7 +177,7 @@ namespace DropdownEdit
             }
         }
 
-        private RepositoryItemDropdownEdit properties = new RepositoryItemDropdownEdit();
+        private RepositoryItemDropdownEdit properties;
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public new RepositoryItemDropdownEdit Properties
@@ -159,6 +185,7 @@ namespace DropdownEdit
             get
             {
                 return this.properties == null ? base.Properties as RepositoryItemDropdownEdit : this.properties;
+
             }
             set
             {
@@ -177,7 +204,6 @@ namespace DropdownEdit
 
         public DropdownEdit()
         {
-
         }
 
         public virtual void Expand()
