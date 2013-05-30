@@ -67,13 +67,15 @@ namespace DropdownEdit
             {
                 return this.Properties.DataSource;
             }
-            //[MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
                 this.Properties.DataSource = value;
             }
         }
 
+        /// <summary>
+        /// 获取或者设置下拉框高度
+        /// </summary>
         public int DropdownHeight
         {
             get
@@ -86,6 +88,9 @@ namespace DropdownEdit
             }
         }
 
+        /// <summary>
+        /// 获取或者设置下拉框宽度
+        /// </summary>
         public int DropdownWidth
         {
             get
@@ -230,12 +235,6 @@ namespace DropdownEdit
         {
         }
 
-        public virtual void Expand()
-        {
-            this.ShowPopup();
-            this.Focus();
-        }
-
         protected override void OnTextChanged(EventArgs e)
         {
             //展开
@@ -269,10 +268,29 @@ namespace DropdownEdit
             this.ClosePopup();
         }
 
+        protected override void OnPopupShown()
+        {
+            if (Text.Length > 0)
+            {
+                //TODO: 绑定所有数据，选中当前行
+                Properties.DataView.RowFilter = string.Empty;
+            }
+
+            this.Focus();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            if (!this.IsPopupOpen)
+            {
+                this.ShowPopup();
+            }
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             //回车
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            if (Properties.DataView.Count > 0 && (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return))
             {
                 //当前行
                 DataRowView rowView = Properties.DataView[Properties.GridView.FocusedRowHandle];
@@ -298,6 +316,24 @@ namespace DropdownEdit
             base.OnKeyDown(e);
         }
 
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                //展开
+                IfExpand();
+                Properties.GridView.FocusedRowHandle -= 1;
+            }
+            else
+            {
+                //展开
+                IfExpand();
+                Properties.GridView.FocusedRowHandle += 1;
+            }
+
+            base.OnMouseWheel(e);
+        }
+
         /// <summary>
         /// 根据属性决定是否展开列表
         /// </summary>
@@ -314,7 +350,8 @@ namespace DropdownEdit
                 {
                     BeginInvoke(new MethodInvoker(delegate
                     {
-                        this.Expand();
+                        this.ShowPopup();
+                        this.SelectionStart = this.Text.Length;
                     }));
                 }
             }

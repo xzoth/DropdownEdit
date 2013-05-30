@@ -48,12 +48,9 @@ namespace DropdownEdit
 
         public RepositoryItemDropdownEdit()
         {
-            this.popupContainerControl = new PopupContainerControl();
-            this.gridControl = new GridControl();
-            this.gridView = new GridView();
-
             this.gridControl.ProcessGridKey += gridControl_ProcessGridKey;
-            this.gridControl.MouseClick += gridControl_MouseClick;
+            this.gridView.RowClick += gridView_RowClick;
+            this.gridView.MouseWheel += gridView_MouseWheel;
 
             this.PopupControl = this.popupContainerControl;
             this.AppearanceDisabled.Options.UseBackColor = true;
@@ -79,16 +76,35 @@ namespace DropdownEdit
             this.gridView.OptionsSelection.EnableAppearanceFocusedCell = false;
         }
 
-        void gridControl_MouseClick(object sender, MouseEventArgs e)
+        void gridView_MouseWheel(object sender, MouseEventArgs e)
         {
-            RaiseSelectedRowChanged();
+            if (e.Delta > 0)
+            {
+                GridView.FocusedRowHandle -= 1;
+            }
+            else
+            {
+                GridView.FocusedRowHandle += 1;
+            }
+        }
+
+        void gridView_RowClick(object sender, RowClickEventArgs e)
+        {
+            if (DataView.Count > 0)
+            {
+                RaiseSelectedRowChanged();
+            }
         }
 
         void gridControl_ProcessGridKey(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            if (DataView.Count > 0 && (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return))
             {
                 RaiseSelectedRowChanged();
+            }
+            else//传递到OwnerEdit
+            {
+
             }
         }
 
@@ -176,6 +192,18 @@ namespace DropdownEdit
             }
         }
 
+        public virtual string RowFilter
+        {
+            get
+            {
+                return DataView.RowFilter;
+            }
+            set
+            {
+                DataView.RowFilter = value;
+            }
+        }
+
         /// <summary>
         /// 数据源视图
         /// </summary>
@@ -226,13 +254,12 @@ namespace DropdownEdit
         {
             DropdownEdit dropdownEdit = base.CreateEditor() as DropdownEdit;
             dropdownEdit.Properties = this;
-            //TODO: init dropdownEdit
 
             return dropdownEdit;
         }
 
-        private GridControl gridControl;
-        private GridView gridView;
-        private PopupContainerControl popupContainerControl;
+        private GridControl gridControl = new GridControl();
+        private GridView gridView = new GridView();
+        private PopupContainerControl popupContainerControl = new PopupContainerControl();
     }
 }
