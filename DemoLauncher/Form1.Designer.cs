@@ -264,6 +264,7 @@
             this.chkIsHighlightKeyword.TabIndex = 3;
             this.chkIsHighlightKeyword.Text = "IsHighlightKeyword";
             this.chkIsHighlightKeyword.UseVisualStyleBackColor = true;
+            this.chkIsHighlightKeyword.CheckedChanged += new System.EventHandler(this.chkIsHighlightKeyword_CheckedChanged);
             // 
             // chkIsApplyRowFilter
             // 
@@ -276,6 +277,7 @@
             this.chkIsApplyRowFilter.TabIndex = 2;
             this.chkIsApplyRowFilter.Text = "IsApplyRowFilter";
             this.chkIsApplyRowFilter.UseVisualStyleBackColor = true;
+            this.chkIsApplyRowFilter.CheckedChanged += new System.EventHandler(this.chkIsApplyRowFilter_CheckedChanged);
             // 
             // chkIsAutoSelect
             // 
@@ -287,6 +289,7 @@
             this.chkIsAutoSelect.TabIndex = 1;
             this.chkIsAutoSelect.Text = "IsAutoSelect";
             this.chkIsAutoSelect.UseVisualStyleBackColor = true;
+            this.chkIsAutoSelect.CheckedChanged += new System.EventHandler(this.chkIsAutoSelect_CheckedChanged);
             // 
             // chkIsExpandOnEdit
             // 
@@ -299,6 +302,7 @@
             this.chkIsExpandOnEdit.TabIndex = 0;
             this.chkIsExpandOnEdit.Text = "IsExpandOnEdit";
             this.chkIsExpandOnEdit.UseVisualStyleBackColor = true;
+            this.chkIsExpandOnEdit.CheckedChanged += new System.EventHandler(this.chkIsExpandOnEdit_CheckedChanged);
             // 
             // tabPage2
             // 
