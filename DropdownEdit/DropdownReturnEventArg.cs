@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace DropdownEdit
 {
+    /// <summary>
+    /// 行选择变更事件参数
+    /// </summary>
     public class SelectedRowChangeEventArg : EventArgs
     {
+        /// <summary>
+        /// 选中的行
+        /// </summary>
         public DataRow SelectedRow
         {
             get;
             set;
         }
     }
-
-    public delegate void SelectedRowChangeHandler(object sender, SelectedRowChangeEventArg e);
 }

@@ -21,14 +21,24 @@ namespace DemoLauncher
         private void Form1_Load(object sender, EventArgs e)
         {
             dropdownEdit1.IsExpandOnEdit = chkIsExpandOnEdit.Checked;
+            dropdownEdit1.IsApplyRowFilter = chkIsApplyRowFilter.Checked;
+            dropdownEdit1.IsAutoSelect = chkIsAutoSelect.Checked;
+            dropdownEdit1.IsHighlightKeyword = chkIsHighlightKeyword.Checked;
 
-            dropdownEdit1.DisplayMember = "ColunmThree";
+            int width = Convert.ToInt32(txtDropdownWidth.Text.Trim());
+            dropdownEdit1.DropdownWidth = width;
+            int height = Convert.ToInt32(txtDropdownHeight.Text.Trim());
+            dropdownEdit1.DropdownHeight = height;
+
+            foreach (DataColumn col in MockData.Columns)
+            {
+                cmbDisplayMember.Items.Add(col.ColumnName);
+            }
+            cmbDisplayMember.SelectedIndex = 0;
+
+            dropdownEdit1.DisplayMember = cmbDisplayMember.Text;
             dropdownEdit1.DataSource = MockData;
-        }
-
-        private void chkIsExpandOnEdit_CheckedChanged(object sender, EventArgs e)
-        {
-            dropdownEdit1.IsExpandOnEdit = chkIsExpandOnEdit.Checked;
+            dropdownEdit1.Focus();
         }
 
         private DataTable mockData = null;
@@ -67,9 +77,55 @@ namespace DemoLauncher
             }
         }
 
+        private void chkIsExpandOnEdit_CheckedChanged(object sender, EventArgs e)
+        {
+            dropdownEdit1.IsExpandOnEdit = chkIsExpandOnEdit.Checked;
+        }
+
         private void dropdownEdit1_SelectedRowChange(object sender, DropdownEdit.SelectedRowChangeEventArg e)
         {
-            txtSelectedValue.Text = e.SelectedRow[dropdownEdit1.DisplayMember].ToString();
+            StringBuilder returnValue = new StringBuilder();
+
+            var table = e.SelectedRow.Table;
+            foreach (DataColumn column in table.Columns)
+            {
+                returnValue.AppendFormat("{0}: {1}\r\n",
+                                         column.ColumnName,
+                                         e.SelectedRow[column.ColumnName].ToString());
+            }
+            txtSelectedValue.Text = returnValue.ToString();
+        }
+
+        private void chkIsApplyRowFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            dropdownEdit1.IsApplyRowFilter = chkIsApplyRowFilter.Checked;
+        }
+
+        private void chkIsAutoSelect_CheckedChanged(object sender, EventArgs e)
+        {
+            dropdownEdit1.IsAutoSelect = chkIsAutoSelect.Checked;
+        }
+
+        private void chkIsHighlightKeyword_CheckedChanged(object sender, EventArgs e)
+        {
+            dropdownEdit1.IsHighlightKeyword = chkIsHighlightKeyword.Checked;
+        }
+
+        private void txtDropdownWidth_TextChanged(object sender, EventArgs e)
+        {
+            int width = Convert.ToInt32(txtDropdownWidth.Text.Trim());
+            dropdownEdit1.DropdownWidth = width;
+        }
+
+        private void txtDropdownHeight_TextChanged(object sender, EventArgs e)
+        {
+            int height = Convert.ToInt32(txtDropdownHeight.Text.Trim());
+            dropdownEdit1.DropdownHeight = height;
+        }
+
+        private void cmbDisplayMember_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dropdownEdit1.DisplayMember = cmbDisplayMember.Text;
         }
     }
 }

@@ -15,11 +15,41 @@ using System.Xml.Serialization;
 
 namespace DropdownEdit
 {
+    /// <summary>
+    /// 多列下拉选择控件
+    /// </summary>
     public class DropdownEdit : PopupContainerEdit
     {
+        #region Menber
+
+        /// <summary>
+        /// 事件锁
+        /// </summary>
         private readonly object eventLock = new object();
 
+        /// <summary>
+        /// 类型名
+        /// </summary>
+        public const string CONST_TYPE_NAME = "DropdownEdit";
+
+        /// <summary>
+        /// 文本改变事件自复位开关
+        /// 设置此复位开关的目的是为了拦截基类及其他方法触发的“不在期望内”的文本改变事件
+        /// </summary>
+        protected bool AutoResetControl = false;
+
+        #endregion
+
+        #region Event
+
+        /// <summary>
+        /// 行选择变更事件
+        /// </summary>
         private SelectedRowChangeHandler selectedRowChangeHandler;
+        /// <summary>
+        /// 行选择变更事件
+        /// </summary>
+        [Category("属性已更改"), Description("行选择变更事件")]
         public event SelectedRowChangeHandler SelectedRowChange
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -40,21 +70,48 @@ namespace DropdownEdit
             }
         }
 
-        #region Member
-
-        /// <summary>
-        /// 文本改变事件自复位开关
-        /// 设置此复位开关的目的是为了拦截基类及其他方法触发的“不在期望内”的文本改变事件
-        /// </summary>
-        protected bool AutoResetControl = false;
-        /// <summary>
-        /// 类型名
-        /// </summary>
-        public const string CONST_TYPE_NAME = "DropdownEdit";
-
         #endregion
 
         #region Property
+
+        /// <summary>
+        /// 获取选中的数据行
+        /// </summary>
+        [NonSerialized]
+        private DataRow selectedRow;
+        /// <summary>
+        /// 获取选中的数据行
+        /// </summary>
+        [XmlIgnore, Browsable(false), Category("数据"), Description("获取选中的数据行")]
+        public DataRow SelectedRow
+        {
+            get
+            {
+                return selectedRow;
+            }
+            internal protected set
+            {
+                selectedRow = value;
+            }
+        }
+
+        /// <summary>
+        /// 获取值
+        /// </summary>
+        [XmlIgnore, Browsable(false), Category("数据"), Description("获取值")]
+        public object Value
+        {
+            get
+            {
+                object resultObj = null;
+                if (SelectedRow != null && !string.IsNullOrWhiteSpace(DisplayMember))
+                {
+                    resultObj = SelectedRow[DisplayMember];
+                }
+
+                return resultObj;
+            }
+        }
 
         /// <summary>
         /// 获取或设置绑定的数据源
@@ -70,12 +127,16 @@ namespace DropdownEdit
             set
             {
                 this.Properties.DataSource = value;
+                SelectedRow = null;
+                AutoResetControl = true;
+                Text = string.Empty;
             }
         }
 
         /// <summary>
         /// 获取或者设置下拉框高度
         /// </summary>
+        [DefaultValue(200), Browsable(true), Category("外观"), Description("获取或者设置下拉框高度")]
         public int DropdownHeight
         {
             get
@@ -91,6 +152,7 @@ namespace DropdownEdit
         /// <summary>
         /// 获取或者设置下拉框宽度
         /// </summary>
+        [DefaultValue(300), Browsable(true), Category("外观"), Description("获取或者设置下拉框宽度")]
         public int DropdownWidth
         {
             get
@@ -111,7 +173,7 @@ namespace DropdownEdit
         /// 获取或者设置是否录入时自动展开下拉列表
         /// </summary>
         [Browsable(true)]
-        [Description("获取或者设置是否在匹配到项时自动展开下拉列表")]
+        [Description("获取或者设置是否在录入时自动展开下拉列表")]
         [Category("行为")]
         [DefaultValue(true)]
         public bool IsExpandOnEdit
@@ -189,7 +251,7 @@ namespace DropdownEdit
             {
                 return isHighlightKeyword;
             }
-            private set
+            set
             {
                 isHighlightKeyword = value;
             }
@@ -207,18 +269,95 @@ namespace DropdownEdit
         }
 
         private RepositoryItemDropdownEdit properties;
-        [Browsable(false)]
+        [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public new RepositoryItemDropdownEdit Properties
         {
             get
             {
-                return this.properties == null ? base.Properties as RepositoryItemDropdownEdit : this.properties;
+                if (this.properties == null)
+                {
+                    this.properties = base.Properties as RepositoryItemDropdownEdit;
+                    if (this.properties == null)
+                    {
+                        this.properties = new RepositoryItemDropdownEdit();
+                    }
+                }
 
+                return this.properties;
+            }
+            internal protected set
+            {
+                this.properties = value;
+            }
+        }
+
+        /// <summary>
+        /// 获取或者设置显示的成员
+        /// </summary>
+        private string displayMember = string.Empty;
+        /// <summary>
+        /// 获取或者设置显示的成员
+        /// </summary>
+        [Browsable(true), Category("数据"), Description("获取或者设置显示的成员"), DefaultValue("")]
+        public string DisplayMember
+        {
+            get
+            {
+                return displayMember;
             }
             set
             {
-                this.properties = value;
+                if (displayMember != value)
+                {
+                    displayMember = value;
+
+                    if (SelectedRow != null)
+                    {
+                        AutoResetControl = true;
+                        base.Text = SelectedRow[displayMember].ToString();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取或者设置关键字匹配模式
+        /// </summary>
+        private StringComparison keyWordMatchMode = StringComparison.CurrentCultureIgnoreCase;
+        /// <summary>
+        /// 获取或者设置关键字匹配模式
+        /// </summary>
+        [Browsable(true), DefaultValue(StringComparison.CurrentCultureIgnoreCase), Category("行为"), Description("获取或者设置关键字匹配模式")]
+        public StringComparison KeyWordMatchMode
+        {
+            get
+            {
+                return keyWordMatchMode;
+            }
+            set
+            {
+                keyWordMatchMode = value;
+            }
+        }
+
+        /// <summary>
+        /// 获取或设置是否单击时展开列表
+        /// </summary>
+        private bool isExpandOnClick = true;
+        /// <summary>
+        /// 获取或设置是否单击时展开列表
+        /// </summary>
+        [Browsable(true), DefaultValue(true), Category("行为"), Description("获取或设置是否单击时展开列表")]
+        public bool IsExpandOnClick
+        {
+            get
+            {
+                return isExpandOnClick;
+            }
+            set
+            {
+                isExpandOnClick = value;
             }
         }
 
@@ -232,11 +371,29 @@ namespace DropdownEdit
         }
 
         public DropdownEdit()
+            : base()
         {
+            this.properties = base.Properties as RepositoryItemDropdownEdit;
         }
 
+        /// <summary>
+        /// 文本改变事件处理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnTextChanged(EventArgs e)
         {
+            #region 检查复位开关
+
+            //拦截事件的执行
+            if (AutoResetControl)
+            {
+                //复位
+                AutoResetControl = false;
+                return;
+            }
+
+            #endregion
+
             //展开
             IfExpand();
 
@@ -244,20 +401,24 @@ namespace DropdownEdit
             {
                 ApplyFilter();
             }
+            else
+            {
+                DoAutoSelect();
+            }
 
             base.OnTextChanged(e);
         }
 
-        public string DisplayMember
-        {
-            get;
-            set;
-        }
-
-        internal protected void OnSelectedRowChanged(DataRow row)
+        /// <summary>
+        /// 触发行选择变更事件
+        /// </summary>
+        /// <param name="row"></param>
+        internal protected virtual void OnSelectedRowChanged(DataRow row)
         {
             string strText = row[DisplayMember].ToString();
             Text = strText;
+
+            SelectedRow = row;
 
             SelectedRowChangeEventArg changeEventArg = new SelectedRowChangeEventArg() { SelectedRow = row };
             if (selectedRowChangeHandler != null)
@@ -268,25 +429,63 @@ namespace DropdownEdit
             this.ClosePopup();
         }
 
+        /// <summary>
+        /// 弹出下拉框事件处理
+        /// </summary>
         protected override void OnPopupShown()
         {
             if (Text.Length > 0)
             {
-                //TODO: 绑定所有数据，选中当前行
-                Properties.DataView.RowFilter = string.Empty;
+                //移除筛选以显示所有数据
+                Properties.RowFilter = string.Empty;
+
+                //选中当前行
+                DoAutoSelect();
             }
 
             this.Focus();
+        }        
+
+        /// <summary>
+        /// 默认选中
+        /// </summary>
+        protected virtual void DoAutoSelect()
+        {
+            //查找编辑器文本
+            for (int rowIndex = 0; rowIndex < Properties.DataView.Count; rowIndex++)
+            {
+                for (int columnIndex = 0; columnIndex < Properties.DataSource.Columns.Count; columnIndex++)
+                {
+                    //项文本
+                    string strText = Properties.DataView[rowIndex][Properties.DataSource.Columns[columnIndex].ColumnName].ToString();
+                    if (strText.Length >= Text.Length)
+                    {
+                        if (strText.Equals(Text, KeyWordMatchMode))
+                        {
+                            Properties.GridView.FocusedRowHandle = rowIndex;
+                            break;
+                        }
+                    }//end if
+                }// end for
+            }//end for
         }
 
+        /// <summary>
+        /// 鼠标击键事件处理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (!this.IsPopupOpen)
+            if (IsExpandOnClick && !this.IsPopupOpen)
             {
                 this.ShowPopup();
             }
         }
 
+        /// <summary>
+        /// 键盘击键事件处理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             //回车
@@ -297,25 +496,40 @@ namespace DropdownEdit
                 //触发选中行事件
                 OnSelectedRowChanged(rowView.Row);
             }
-
             //上箭头
-            if (e.KeyCode == Keys.Up)
+            else if (e.KeyCode == Keys.Up)
             {
                 //展开
                 IfExpand();
                 Properties.GridView.FocusedRowHandle -= 1;
             }
             //下箭头
-            if (e.KeyCode == Keys.Down)
+            else if (e.KeyCode == Keys.Down)
             {
                 //展开
                 IfExpand();
                 Properties.GridView.FocusedRowHandle += 1;
             }
+            //取消
+            else if (e.KeyCode == Keys.Escape && IsPopupOpen)
+            {
+                ClosePopup(DevExpress.XtraEditors.PopupCloseMode.Cancel);
+            }
+            else//其他键传递自行处理
+            {
+                base.OnKeyDown(e);
+                return;
+            }
 
+            //标记事件已处理
+            e.Handled = true;
             base.OnKeyDown(e);
         }
 
+        /// <summary>
+        /// 鼠标滚轮事件处理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             if (e.Delta > 0)
@@ -351,7 +565,6 @@ namespace DropdownEdit
                     BeginInvoke(new MethodInvoker(delegate
                     {
                         this.ShowPopup();
-                        this.SelectionStart = this.Text.Length;
                     }));
                 }
             }

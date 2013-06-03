@@ -81,11 +81,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DropdownEdit\DropdownEdit.csproj">
-      <Project>{CBD74238-104F-45C5-8B4B-F81BD8BA393C}</Project>
+      <Project>{cbd74238-104f-45c5-8b4b-f81bd8ba393c}</Project>
       <Name>DropdownEdit</Name>
     </ProjectReference>
   </ItemGroup>
