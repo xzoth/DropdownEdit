@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dropdownEdit3 = new DropdownEdit.DropdownEdit();
+            this.dropdownEdit1 = new DropdownEdit.DropdownEdit();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtSelectedValue = new System.Windows.Forms.TextBox();
@@ -50,13 +52,21 @@
             this.chkIsAutoSelect = new System.Windows.Forms.CheckBox();
             this.chkIsExpandOnEdit = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.dropdownEdit1 = new DropdownEdit.DropdownEdit();
-            this.dropdownEdit3 = new DropdownEdit.DropdownEdit();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemDropdownEdit2 = new DropdownEdit.RepositoryItemDropdownEdit();
+            this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDropdownEdit2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -88,6 +98,34 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "DropdownEdit";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // dropdownEdit3
+            // 
+            this.dropdownEdit3.DataSource = null;
+            this.dropdownEdit3.EditValue = "";
+            this.dropdownEdit3.Location = new System.Drawing.Point(38, 122);
+            this.dropdownEdit3.Name = "dropdownEdit3";
+            this.dropdownEdit3.Properties.AppearanceDisabled.Options.UseBackColor = true;
+            this.dropdownEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit3.Properties.RowFilter = "";
+            this.dropdownEdit3.Size = new System.Drawing.Size(260, 20);
+            this.dropdownEdit3.TabIndex = 12;
+            this.dropdownEdit3.TextChanged += new System.EventHandler(this.dropdownEdit3_TextChanged);
+            // 
+            // dropdownEdit1
+            // 
+            this.dropdownEdit1.DataSource = null;
+            this.dropdownEdit1.DisplayMember = null;
+            this.dropdownEdit1.EditValue = "";
+            this.dropdownEdit1.Location = new System.Drawing.Point(38, 54);
+            this.dropdownEdit1.Name = "dropdownEdit1";
+            this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit1.Properties.RowFilter = "";
+            this.dropdownEdit1.Size = new System.Drawing.Size(260, 20);
+            this.dropdownEdit1.TabIndex = 11;
+            this.dropdownEdit1.SelectedRowChange += new DropdownEdit.SelectedRowChangeHandler(this.dropdownEdit1_SelectedRowChange);
             // 
             // label1
             // 
@@ -294,6 +332,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.gridControl1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -302,32 +341,63 @@
             this.tabPage2.Text = "In Place";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // dropdownEdit1
+            // gridControl1
             // 
-            this.dropdownEdit1.DataSource = null;
-            this.dropdownEdit1.DisplayMember = null;
-            this.dropdownEdit1.EditValue = "";
-            this.dropdownEdit1.Location = new System.Drawing.Point(38, 54);
-            this.dropdownEdit1.Name = "dropdownEdit1";
-            this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            this.gridControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridControl1.Location = new System.Drawing.Point(6, 6);
+            this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Name = "gridControl1";
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemDropdownEdit2});
+            this.gridControl1.Size = new System.Drawing.Size(635, 328);
+            this.gridControl1.TabIndex = 0;
+            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView1});
+            // 
+            // gridView1
+            // 
+            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn1,
+            this.gridColumn2,
+            this.gridColumn3});
+            this.gridView1.GridControl = this.gridControl1;
+            this.gridView1.Name = "gridView1";
+            // 
+            // gridColumn1
+            // 
+            this.gridColumn1.Caption = "gridColumn1";
+            this.gridColumn1.ColumnEdit = this.repositoryItemDropdownEdit2;
+            this.gridColumn1.FieldName = "ColunmOne";
+            this.gridColumn1.Name = "gridColumn1";
+            this.gridColumn1.Visible = true;
+            this.gridColumn1.VisibleIndex = 0;
+            // 
+            // repositoryItemDropdownEdit2
+            // 
+            this.repositoryItemDropdownEdit2.AppearanceDisabled.Options.UseBackColor = true;
+            this.repositoryItemDropdownEdit2.AutoHeight = false;
+            this.repositoryItemDropdownEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dropdownEdit1.Properties.RowFilter = "";
-            this.dropdownEdit1.Size = new System.Drawing.Size(260, 20);
-            this.dropdownEdit1.TabIndex = 11;
-            this.dropdownEdit1.SelectedRowChange += new DropdownEdit.SelectedRowChangeHandler(this.dropdownEdit1_SelectedRowChange);
+            this.repositoryItemDropdownEdit2.Name = "repositoryItemDropdownEdit2";
+            this.repositoryItemDropdownEdit2.RowFilter = "";
             // 
-            // dropdownEdit3
+            // gridColumn2
             // 
-            this.dropdownEdit3.DataSource = null;
-            this.dropdownEdit3.Location = new System.Drawing.Point(38, 122);
-            this.dropdownEdit3.Name = "dropdownEdit3";
-            this.dropdownEdit3.Properties.AppearanceDisabled.Options.UseBackColor = true;
-            this.dropdownEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dropdownEdit3.Properties.RowFilter = "";
-            this.dropdownEdit3.Size = new System.Drawing.Size(260, 20);
-            this.dropdownEdit3.TabIndex = 12;
-            this.dropdownEdit3.TextChanged += new System.EventHandler(this.dropdownEdit3_TextChanged);
+            this.gridColumn2.Caption = "gridColumn2";
+            this.gridColumn2.FieldName = "ColunmTwo";
+            this.gridColumn2.Name = "gridColumn2";
+            this.gridColumn2.Visible = true;
+            this.gridColumn2.VisibleIndex = 1;
+            // 
+            // gridColumn3
+            // 
+            this.gridColumn3.Caption = "gridColumn3";
+            this.gridColumn3.FieldName = "ColunmThree";
+            this.gridColumn3.Name = "gridColumn3";
+            this.gridColumn3.Visible = true;
+            this.gridColumn3.VisibleIndex = 2;
             // 
             // Form1
             // 
@@ -341,10 +411,14 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit3.Properties)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemDropdownEdit2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -375,6 +449,12 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbDisplayMember;
         private DropdownEdit.DropdownEdit dropdownEdit3;
+        private DevExpress.XtraGrid.GridControl gridControl1;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DropdownEdit.RepositoryItemDropdownEdit repositoryItemDropdownEdit2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
 
 
     }

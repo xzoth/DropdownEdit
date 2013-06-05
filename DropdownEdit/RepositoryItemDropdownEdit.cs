@@ -116,7 +116,7 @@ namespace DropdownEdit
         /// 获取或设置绑定的数据源
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        internal protected DataTable DataSource
+        public DataTable DataSource
         {
             get
             {

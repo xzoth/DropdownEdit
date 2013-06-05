@@ -327,6 +327,10 @@ namespace DropdownEdit
         {
             get
             {
+                if (string.IsNullOrEmpty(displayMember) && DataSource != null && DataSource.Columns.Count > 0)
+                {
+                    displayMember = DataSource.Columns[0].ColumnName;
+                }
                 return displayMember;
             }
             set
@@ -443,6 +447,7 @@ namespace DropdownEdit
         internal protected virtual void OnSelectedRowChanged(DataRow row)
         {
             string strText = row[DisplayMember].ToString();
+            AutoResetControl = true;
             Text = strText;
 
             SelectedRow = row;
