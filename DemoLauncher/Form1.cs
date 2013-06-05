@@ -8,11 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DropdownEdit;
 
 namespace DemoLauncher
 {
     public partial class Form1 : Form
     {
+        DropdownEdit.DropdownEdit dropdownEdit2;
+
         public Form1()
         {
             InitializeComponent();
@@ -126,6 +129,17 @@ namespace DemoLauncher
         private void cmbDisplayMember_SelectedIndexChanged(object sender, EventArgs e)
         {
             dropdownEdit1.DisplayMember = cmbDisplayMember.Text;
+        }
+
+        private void dropdownEdit3_TextChanged(object sender, EventArgs e)
+        {
+            string strText = dropdownEdit3.Text;
+            if (!string.IsNullOrWhiteSpace(strText))
+            {
+                //string strFilter = string.Format("", strText);
+                //dropdownEdit3.DataSource = MockData.Select(strFilter);
+                dropdownEdit3.DataSource = MockData;
+            }
         }
     }
 }

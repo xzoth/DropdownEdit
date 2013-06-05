@@ -30,7 +30,6 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dropdownEdit1 = new DropdownEdit.DropdownEdit();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtSelectedValue = new System.Windows.Forms.TextBox();
@@ -51,10 +50,13 @@
             this.chkIsAutoSelect = new System.Windows.Forms.CheckBox();
             this.chkIsExpandOnEdit = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.dropdownEdit1 = new DropdownEdit.DropdownEdit();
+            this.dropdownEdit3 = new DropdownEdit.DropdownEdit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit3.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -72,6 +74,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.dropdownEdit3);
             this.tabPage1.Controls.Add(this.dropdownEdit1);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.label2);
@@ -85,20 +88,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "DropdownEdit";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // dropdownEdit1
-            // 
-            this.dropdownEdit1.DataSource = null;
-            this.dropdownEdit1.DisplayMember = null;
-            this.dropdownEdit1.EditValue = "";
-            this.dropdownEdit1.Location = new System.Drawing.Point(38, 54);
-            this.dropdownEdit1.Name = "dropdownEdit1";
-            this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.dropdownEdit1.Properties.RowFilter = "";
-            this.dropdownEdit1.Size = new System.Drawing.Size(260, 20);
-            this.dropdownEdit1.TabIndex = 11;
-            this.dropdownEdit1.SelectedRowChange += new DropdownEdit.SelectedRowChangeHandler(this.dropdownEdit1_SelectedRowChange);
             // 
             // label1
             // 
@@ -117,7 +106,6 @@
             this.label2.Size = new System.Drawing.Size(101, 12);
             this.label2.TabIndex = 9;
             this.label2.Text = "Dynamic DataBind";
-            this.label2.Visible = false;
             // 
             // txtSelectedValue
             // 
@@ -314,6 +302,33 @@
             this.tabPage2.Text = "In Place";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // dropdownEdit1
+            // 
+            this.dropdownEdit1.DataSource = null;
+            this.dropdownEdit1.DisplayMember = null;
+            this.dropdownEdit1.EditValue = "";
+            this.dropdownEdit1.Location = new System.Drawing.Point(38, 54);
+            this.dropdownEdit1.Name = "dropdownEdit1";
+            this.dropdownEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit1.Properties.RowFilter = "";
+            this.dropdownEdit1.Size = new System.Drawing.Size(260, 20);
+            this.dropdownEdit1.TabIndex = 11;
+            this.dropdownEdit1.SelectedRowChange += new DropdownEdit.SelectedRowChangeHandler(this.dropdownEdit1_SelectedRowChange);
+            // 
+            // dropdownEdit3
+            // 
+            this.dropdownEdit3.DataSource = null;
+            this.dropdownEdit3.Location = new System.Drawing.Point(38, 122);
+            this.dropdownEdit3.Name = "dropdownEdit3";
+            this.dropdownEdit3.Properties.AppearanceDisabled.Options.UseBackColor = true;
+            this.dropdownEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.dropdownEdit3.Properties.RowFilter = "";
+            this.dropdownEdit3.Size = new System.Drawing.Size(260, 20);
+            this.dropdownEdit3.TabIndex = 12;
+            this.dropdownEdit3.TextChanged += new System.EventHandler(this.dropdownEdit3_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -326,9 +341,10 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dropdownEdit3.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -358,6 +374,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbDisplayMember;
+        private DropdownEdit.DropdownEdit dropdownEdit3;
 
 
     }

@@ -83,7 +83,7 @@ namespace DropdownEdit
         /// 获取选中的数据行
         /// </summary>
         [XmlIgnore, Browsable(false), Category("数据"), Description("获取选中的数据行")]
-        public DataRow SelectedRow
+        public virtual DataRow SelectedRow
         {
             get
             {
@@ -99,14 +99,14 @@ namespace DropdownEdit
         /// 获取值
         /// </summary>
         [XmlIgnore, Browsable(false), Category("数据"), Description("获取值")]
-        public object Value
+        public virtual object Value
         {
             get
             {
                 object resultObj = null;
-                if (SelectedRow != null && !string.IsNullOrWhiteSpace(DisplayMember))
+                if (SelectedRow != null && !string.IsNullOrWhiteSpace(ValueMember))
                 {
-                    resultObj = SelectedRow[DisplayMember];
+                    resultObj = SelectedRow[ValueMember];
                 }
 
                 return resultObj;
@@ -118,7 +118,7 @@ namespace DropdownEdit
         /// </summary>
         [XmlIgnore, Browsable(false)]
         [Category("数据"), Description("数据源")]
-        public DataTable DataSource
+        public virtual DataTable DataSource
         {
             get
             {
@@ -137,7 +137,7 @@ namespace DropdownEdit
         /// 获取或者设置下拉框高度
         /// </summary>
         [DefaultValue(200), Browsable(true), Category("外观"), Description("获取或者设置下拉框高度")]
-        public int DropdownHeight
+        public virtual int DropdownHeight
         {
             get
             {
@@ -153,7 +153,7 @@ namespace DropdownEdit
         /// 获取或者设置下拉框宽度
         /// </summary>
         [DefaultValue(300), Browsable(true), Category("外观"), Description("获取或者设置下拉框宽度")]
-        public int DropdownWidth
+        public virtual int DropdownWidth
         {
             get
             {
@@ -293,14 +293,37 @@ namespace DropdownEdit
         }
 
         /// <summary>
-        /// 获取或者设置显示的成员
+        /// 获取或者设置值的成员名称
+        /// </summary>
+        private string valueMember = string.Empty;
+        /// <summary>
+        /// 获取或者设置值的成员名称
+        /// </summary>
+        [Browsable(true), Category("数据"), Description("获取或者设置值的成员名称"), DefaultValue("")]
+        public virtual string ValueMember
+        {
+            get
+            {
+                return valueMember;
+            }
+            set
+            {
+                if (valueMember != value)
+                {
+                    valueMember = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取或者设置显示的成员名称
         /// </summary>
         private string displayMember = string.Empty;
         /// <summary>
-        /// 获取或者设置显示的成员
+        /// 获取或者设置显示的成员名称
         /// </summary>
-        [Browsable(true), Category("数据"), Description("获取或者设置显示的成员"), DefaultValue("")]
-        public string DisplayMember
+        [Browsable(true), Category("数据"), Description("获取或者设置显示的成员名称"), DefaultValue("")]
+        public virtual string DisplayMember
         {
             get
             {
@@ -382,28 +405,32 @@ namespace DropdownEdit
         /// <param name="e"></param>
         protected override void OnTextChanged(EventArgs e)
         {
-            #region 检查复位开关
-
-            //拦截事件的执行
-            if (AutoResetControl)
+            if (!DesignMode && DataSource != null)
             {
-                //复位
-                AutoResetControl = false;
-                return;
-            }
 
-            #endregion
+                #region 检查复位开关
 
-            //展开
-            IfExpand();
+                //拦截事件的执行
+                if (AutoResetControl)
+                {
+                    //复位
+                    AutoResetControl = false;
+                    return;
+                }
 
-            if (IsApplyRowFilter)
-            {
-                ApplyFilter();
-            }
-            else
-            {
-                DoAutoSelect();
+                #endregion
+
+                //展开
+                IfExpand();
+
+                if (IsApplyRowFilter)
+                {
+                    ApplyFilter();
+                }
+                else
+                {
+                    DoAutoSelect();
+                }
             }
 
             base.OnTextChanged(e);
@@ -444,7 +471,7 @@ namespace DropdownEdit
             }
 
             this.Focus();
-        }        
+        }
 
         /// <summary>
         /// 默认选中
@@ -553,20 +580,13 @@ namespace DropdownEdit
         /// </summary>
         private void IfExpand()
         {
-            if (this.Site != null && this.Site.DesignMode)
+            if (!DesignMode && IsExpandOnEdit && !this.IsPopupOpen)
             {
-
-            }
-            else
-            {
-                //展开
-                if (IsExpandOnEdit && !this.IsPopupOpen)
-                {
-                    BeginInvoke(new MethodInvoker(delegate
-                    {
-                        this.ShowPopup();
-                    }));
-                }
+                //BeginInvoke(new MethodInvoker(delegate
+                //{
+                //    this.ShowPopup();
+                //}));
+                this.ShowPopup();
             }
         }
 
