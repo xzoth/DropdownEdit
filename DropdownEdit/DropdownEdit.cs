@@ -128,7 +128,7 @@ namespace DropdownEdit
             {
                 this.Properties.DataSource = value;
                 SelectedRow = null;
-                AutoResetControl = true;
+                //AutoResetControl = true;
                 Text = string.Empty;
             }
         }
@@ -342,7 +342,7 @@ namespace DropdownEdit
                     if (SelectedRow != null)
                     {
                         AutoResetControl = true;
-                        base.Text = SelectedRow[displayMember].ToString();
+                        Text = SelectedRow[displayMember].ToString();
                     }
                 }
             }
@@ -409,21 +409,20 @@ namespace DropdownEdit
         /// <param name="e"></param>
         protected override void OnTextChanged(EventArgs e)
         {
+            #region 检查复位开关
+
+            //拦截事件的执行
+            if (AutoResetControl)
+            {
+                //复位
+                AutoResetControl = false;
+                return;
+            }
+
+            #endregion
+
             if (!DesignMode && DataSource != null)
             {
-
-                #region 检查复位开关
-
-                //拦截事件的执行
-                if (AutoResetControl)
-                {
-                    //复位
-                    AutoResetControl = false;
-                    return;
-                }
-
-                #endregion
-
                 //展开
                 IfExpand();
 
