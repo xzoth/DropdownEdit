@@ -209,6 +209,19 @@ namespace DropdownEdit
             }
         }
 
+        /// <summary>
+        /// 获取当前所属编辑器
+        /// </summary>
+        public new DropdownEdit OwnerEdit
+        {
+            get
+            {
+                DropdownEdit editor = base.OwnerEdit as DropdownEdit;
+
+                return editor ?? PopupControl.OwnerEdit as DropdownEdit;
+            }
+        }
+
         #endregion
 
         #region Method
@@ -327,9 +340,11 @@ namespace DropdownEdit
         private void RaiseSelectedRowChanged()
         {
             DropdownEdit editor = OwnerEdit as DropdownEdit;
-
-            DataRow row = DataView[GridView.FocusedRowHandle].Row;
-            editor.OnSelectedRowChanged(row);
+            if (editor != null)
+            {
+                DataRow row = DataView[GridView.FocusedRowHandle].Row;
+                editor.OnSelectedRowChanged(row);
+            }
         }
 
         #endregion        

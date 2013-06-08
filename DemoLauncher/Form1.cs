@@ -43,7 +43,6 @@ namespace DemoLauncher
             dropdownEdit1.DataSource = MockData;
             dropdownEdit1.Focus();
 
-
             gridControl1.DataSource = MockData;
             repositoryItemDropdownEdit2.DataSource = MockData.Copy();
         }

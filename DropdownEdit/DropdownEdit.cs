@@ -275,16 +275,7 @@ namespace DropdownEdit
         {
             get
             {
-                if (this.properties == null)
-                {
-                    this.properties = base.Properties as RepositoryItemDropdownEdit;
-                    if (this.properties == null)
-                    {
-                        this.properties = new RepositoryItemDropdownEdit();
-                    }
-                }
-
-                return this.properties;
+                return this.properties ?? base.Properties as RepositoryItemDropdownEdit ?? new RepositoryItemDropdownEdit();
             }
             internal protected set
             {
